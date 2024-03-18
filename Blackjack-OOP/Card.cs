@@ -1,86 +1,122 @@
-﻿
-namespace Blackjack_OOP
+﻿namespace Blackjack_OOP
 {
+    public enum Suit : int
+    {
+        Hearts,
+        Diamonds,
+        Clubs,
+        Spades
+    }
+
+    public enum Face : int
+    {
+        Ace,
+        Two,
+        Three,
+        Four,
+        Five,
+        Six,
+        Seven,
+        Eight,
+        Nine,
+        Ten,
+        Jack,
+        Queen,
+        King
+    }
+
+
     public class Card
     {
-        public string Suit { get; set; }
-        public string Face { get; set; }
+        public Suit Suit { get; set; }
+        public Face Face { get; set; }
         public int Value { get; set; }
+        public char Symbol { get; set; }
+        public ConsoleColor CardColor { get; set; }
 
-        public enum EnumSuit
+        public Card(Suit suit, Face face)
         {
-            Hearts,
-            Diamonds,
-            Clubs,
-            Spades
+            Suit = suit;
+            Face = face;
+            SetCardValueAndColor();
         }
 
-        public enum EnumFace
+        private void SetCardValueAndColor()
         {
-            Ace,
-            Two,
-            Three,
-            Four,
-            Five,
-            Six,
-            Seven,
-            Eight,
-            Nine,
-            Ten,
-            Jack,
-            Queen,
-            King
+            if (Suit == Suit.Hearts || Suit == Suit.Diamonds)
+            {
+                CardColor = ConsoleColor.Red;
+            }
+            else
+            {
+                CardColor = ConsoleColor.Black;
+            }
+
+            switch (Face)
+            {
+                case Face.Ace:
+                    Value = 11; // Of 1, afhankelijk van de spellogica
+                    Symbol = 'A';
+                    break;
+                case Face.Two:
+                    Value = 2;
+                    Symbol = '2';
+                    break;
+                case Face.Three:
+                    Value = 3;
+                    Symbol = '3';
+                    break;
+                case Face.Four:
+                    Value = 4;
+                    Symbol = '4';
+                    break;
+
+                case Face.Five:
+                    Value = 5;
+                    Symbol = '5';
+                    break;
+                case Face.Six:
+                    Value = 6;
+                    Symbol = '6';
+                    break;
+                case Face.Seven:
+                    Value = 7;
+                    Symbol = '7';
+                    break;
+                case Face.Eight:
+                    Value = 8;
+                    Symbol = '8';
+                    break;
+                case Face.Nine:
+                    Value = 9;
+                    Symbol = '9';
+                    break;
+                case Face.Ten:
+                    Value = 10;
+                    Symbol = 'T';
+                    break;
+
+                default:
+                    Value = 10; // Voor Jack, Queen, King
+                    Symbol = char.Parse(Face.ToString().Substring(0, 1));
+                    break;
+            }
         }
 
-        public  enum EnumFaceEmoij
+        public int PrintValue()
         {
+            return Value;
         }
 
-        public enum EnumFaceValue
-        {
-            Ace = 1 | 11,
-            Two = 2,
-            Three = 3,
-            Four = 4,
-            Five = 5,
-            Six = 6,
-            Seven = 7,
-            Eight = 8,
-            Nine = 9,
-            Ten = 10,
-            Jack = 10,
-            Queen = 10,
-            King = 10
-        }
-
-        public override string ToString()
-        {
-            return $"{Face} of {Suit}";
-        }
-
-        public void Print()
-        {
-            Console.WriteLine(ToString());
-        }
-
-        public void PrintValue()
-        {
-            Console.WriteLine(Value);
-        }
-
-        public void PrintSuit()
-        {
-            Console.WriteLine(Suit);
-        }
-
-        public void PrintFace()
-        {
-            Console.WriteLine(Face);
-        }
 
         public void PrintCard()
         {
-            Console.WriteLine($"{Face} of {Suit}");
+            Console.ForegroundColor = CardColor;
+            Console.WriteLine($"{Symbol} of {Suit}");
+            Console.ResetColor();
         }
+        
+        
+           
     }
 }

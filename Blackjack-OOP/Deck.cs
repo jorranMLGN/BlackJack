@@ -7,37 +7,11 @@ namespace Blackjack_OOP
 
         public Deck()
         {
-            _cards = new List<Card>();
-               
-            foreach (var suit in Enum.GetValues(typeof(Card.EnumSuit)))
-            {
-                foreach (var face in Enum.GetValues(typeof(Card.EnumFace)))
-                {
-                    var card = new Card
-                    {
-                        Suit = suit.ToString(),
-                        Face = face.ToString(),
-                        Value = (int)face
-                    };
-                    _cards.Add(card);
-                }
-            }
-            Shuffle();
+            CreateDeck();
         }
 
-        public void Print()
-        {
-            foreach (var card in _cards)
-            {
-                card.Print();
-            }
-        }
 
-        public void Shuffle()
-        {
-            var rnd = new Random();
-            _cards = _cards.OrderBy(x => rnd.Next()).ToList();
-        }
+
 
         public Card Draw()
         {
@@ -45,5 +19,27 @@ namespace Blackjack_OOP
             _cards.Remove(card);
             return card;
         }
+
+
+        private void Shuffle()
+        {
+            var rnd = new Random();
+            _cards = _cards.OrderBy(x => rnd.Next()).ToList();
+        }
+
+        private void CreateDeck()
+        {
+            _cards = new List<Card>();
+            foreach (Suit suit in Enum.GetValues(typeof(Suit)))
+            {
+                foreach (Face face in Enum.GetValues(typeof(Face)))
+                {
+                    var card = new Card(suit, face);
+                    _cards.Add(card);
+                }
+            }
+            Shuffle();
+        }
+
     }
 }

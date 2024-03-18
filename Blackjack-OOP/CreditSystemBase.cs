@@ -5,7 +5,7 @@ namespace Blackjack_OOP
     {
        
         public CreditSystemBase() { }
-        public int Credit { get; set; }
+        public double Credit { get; set; }
         public int Bet { get; set; }
         public int Win { get; set; }
         public int Loss { get; set; }
@@ -55,6 +55,13 @@ namespace Blackjack_OOP
             Credit += Bet * 2;
             Win++;
         }
+
+        public void BlackJackCredit()
+        {
+            Credit += Bet * 2.5;
+            Win++;
+        }
+
         public void DrawCredit()
         {
             Credit += Bet;
