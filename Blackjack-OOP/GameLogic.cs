@@ -73,6 +73,21 @@ internal class GameLogic
         _player.ForEach(player => { });
     }
 
+    private void ReturnMoney()
+    {
+        _player.ForEach(player =>
+        {
+            if (player.GetScore() > 21)
+                player.Money -= 10;
+            else if (_house.Score > 21)
+                player.Money += 10;
+            else if (player.GetScore() > _house.Score)
+                player.Money += 10;
+            else if (_house.Score > player.GetScore())
+                player.Money -= 10;
+        });
+    }
+
 
     private void CheckGameStandards()
     {
@@ -83,24 +98,8 @@ internal class GameLogic
 
     public void End()
     {
-        _player.ForEach(player =>
-        {
-            Console.WriteLine(player + " hand:");
-            player.DisplayHands();
-            player.GetScore();
-            _house.PrintHand();
-            _house.PrintScore();
-
-            if (player.GetScore() > 21)
-                Console.WriteLine("Player busts! House wins!");
-            else if (_house.Score > 21)
-                Console.WriteLine("House busts! Player wins!");
-            else if (player.GetScore() > _house.Score)
-                Console.WriteLine("Player wins!");
-            else if (_house.Score > player.GetScore())
-                Console.WriteLine("House wins!");
-            else
-                Console.WriteLine("It's a tie!");
-        });
+        Console.WriteLine("Game over");
+        ReturnMoney();
+        _player.ForEach(player => Console.WriteLine($"{player.Name} has {player.Money}"));
     }
 }
