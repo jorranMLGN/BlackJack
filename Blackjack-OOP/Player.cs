@@ -5,13 +5,30 @@ namespace Blackjack_OOP;
 internal class Player(string name)
 {
     public string Name { get; set; } = name;
-
     private double _money = 100;
 
+    public double Money
+    {
+        get => _money;
+        set
+        {
+            if (value < 0) throw new InvalidOperationException("Not enough money");
+            _money = value;
+        }
+    }
+
     public List<Card> Hand { get; private set; } = [];
-    public List<List<Card>> Hands { get; set; } = new();
+    public List<List<Card>> Hands { get; set; } = new() { new List<Card>() };
     private int _currentHandIndex = 0;
 
+
+    public void PlayerTurn(Deck deck)
+    {
+        Console.WriteLine("Player's turn");
+        DisplayHands();
+
+        RandomAlgorithm(Hands[_currentHandIndex]);
+    }
 
     public void DrawCard(Deck deck)
     {
@@ -20,6 +37,18 @@ internal class Player(string name)
     }
 
 
+    private bool CanSplit()
+    {
+        return Hands[_currentHandIndex].Count == 2 &&
+               Hands[_currentHandIndex][0].Value == Hands[_currentHandIndex][1].Value;
+    }
+
+    private bool CanDoubleDown()
+    {
+        return Hands[_currentHandIndex].Count == 2;
+    }
+    
+    
     public void SplitHand()
     {
         if (Hands[_currentHandIndex].Count == 2 &&
@@ -69,5 +98,26 @@ internal class Player(string name)
         }
 
         return sb.ToString();
+    }
+
+    public void RandomAction(List<Card> hands)
+    {
+        var random = new Random();
+        var action = random.Next(0, 3);
+        switch (action)
+        {
+            case 0:
+                DrawCard(hands);
+                break;
+            case 1:
+                Stand();
+                break;
+            case 2:
+                SplitHand();
+                break;
+            case 3:
+                DrawCard(hands);
+                break;
+        }
     }
 }

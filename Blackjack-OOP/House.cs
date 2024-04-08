@@ -6,6 +6,12 @@ internal class House
     public int Score { get; set; }
 
 
+    public House()
+    {
+        Hand = new List<Card>();
+        Score = 0;
+    }
+
     public void TakeTurn(Deck deck, Player player)
     {
         Console.WriteLine("House's turn");
@@ -31,12 +37,11 @@ internal class House
         }
     }
 
-
-    public House()
+    public void PlayerTurn(Player player)
     {
-        Hand = new List<Card>();
-        Score = 0;
+        
     }
+
 
     public void DrawCard(Deck deck)
     {
