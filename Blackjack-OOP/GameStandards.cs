@@ -4,8 +4,7 @@ public class GameStandards
 {
     public static readonly int MaxPlayers = 6;
     public static readonly int MinPlayers = 1;
-    public static readonly int StartingMoney = 100;
-    public static readonly int StartingDeckCount = 6;
+
     public static readonly int BlackjackValue = 21;
     public static readonly int DealerStandValue = 17;
     public static readonly int MaxHandValue = 21;

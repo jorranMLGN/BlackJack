@@ -42,10 +42,7 @@ public class Card
 
     private void SetCardValueAndColor()
     {
-        if (Suit == Suit.Hearts || Suit == Suit.Diamonds)
-            CardColor = ConsoleColor.Red;
-        else
-            CardColor = ConsoleColor.Black;
+        CardColor = Suit is Suit.Hearts or Suit.Diamonds ? ConsoleColor.Red : ConsoleColor.Black;
 
         switch (Face)
         {
@@ -105,7 +102,7 @@ public class Card
 
             default:
                 Value = 10; // Voor Jack, Queen, King
-                Symbol = char.Parse(Face.ToString().Substring(0, 1));
+                Symbol = char.Parse(Face.ToString()[..1]);
                 break;
         }
     }

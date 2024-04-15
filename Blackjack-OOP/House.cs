@@ -1,59 +1,112 @@
 ﻿namespace Blackjack_OOP;
 
-internal class House
+internal class House : Participant
 {
-    public List<Card> Hand { get; set; }
-    public int Score { get; set; }
-
-
     public House()
     {
         Hand = new List<Card>();
-        Score = 0;
     }
 
     public void TakeTurn(Deck deck, Player player)
     {
-        Console.WriteLine("House's turn");
-        Console.WriteLine("Y = Give card  / N = Pass / S = Split / D = Double Down");
-        Console.WriteLine("What would you like to do?");
-        var response = Console.ReadLine();
-        switch (response)
+        for (var i = 0; i < player.Hands.Count; i++)
         {
-            case "Y":
-                DrawCard(deck);
-                break;
-            case "N":
-                break;
-            case "S":
-                player.SplitHand();
-                break;
-            case "D":
-                player.DoubleDown(deck);
-                break;
+            var playerStands = false;
+            while (!player.IsBusted() && GetScore() != 21 && !playerStands)
+            {
+                player.PlayerTurn();
+                Console.ForegroundColor = ConsoleColor.Yellow;
 
-            default:
-                Console.WriteLine("Invalid input");
+                Console.WriteLine("Dealer action:");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine(
+                    "Y = Give player card  / N = Let player stand / S = Let player split / D = Let player double down");
+                Console.WriteLine("What would you like to do?");
+                var response = Console.ReadLine();
+                Console.ForegroundColor = ConsoleColor.Red;
+                switch (response?.ToUpper())
+                {
+                    case "Y":
+                        if (!player.IsBusted())
+                            player.DrawCard(deck);
+                        else
+                            Console.WriteLine("Player is busted");
+
+                        break;
+                    case "N":
+                        player.Stand();
+                        playerStands = true;
+                        break;
+                    case "S":
+                        if (!player.CanSplit())
+                        {
+                            Console.WriteLine("You can't split");
+                            continue;
+                        }
+
+                        player.SplitHand();
+
+                        break;
+                    case "D":
+                        if (!player.CanDoubleDown())
+                        {
+                            Console.WriteLine("You can't double down");
+                            continue;
+                        }
+
+                        player.DoubleDown(deck);
+
+                        break;
+
+                    default:
+                        Console.WriteLine("Invalid input");
+                        break;
+                }
+
+
+                Console.ResetColor();
+
+                if (!player.IsBusted()) continue;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Player is busted\n");
+                Console.ResetColor();
                 break;
+            }
+
+            if (GetScore() != 21) continue;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"{player.Name} has blackjack!");
+            Console.ResetColor();
         }
+    }
+
+    public void SelfTurn(Deck deck)
+    {
+        while (GetScore() < 17) DrawCard(deck);
+        if (GetScore() <= 21) return;
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine("Dealer is busted\n");
+        Console.ResetColor();
+    }
+
+    public void RoundReset()
+    {
+        Hand = new List<Card>();
+    }
+
+    public void PrintHand()
+    {
+        Console.ForegroundColor = ConsoleColor.Cyan;
+        Console.WriteLine("Dealer's hand:");
+        Console.ForegroundColor = ConsoleColor.Gray;
+        foreach (var card in Hand) card.PrintCard();
+
+        Console.WriteLine($"Score: {GetScore()}\n");
     }
 
 
     public void DrawCard(Deck deck)
     {
-        var card = deck.Draw();
-        Hand.Add(card);
-        Score += card.Value;
-    }
-
-    public void PrintHand()
-    {
-        Console.WriteLine("House's hand:");
-        foreach (var card in Hand) card.PrintCard();
-    }
-
-    public void PrintScore()
-    {
-        Console.WriteLine(Score);
+        Hand.Add(deck.Draw());
     }
 }

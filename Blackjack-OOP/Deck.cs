@@ -12,11 +12,12 @@ internal class Deck
 
     public Card Draw()
     {
+        if (_cards.Count == 0) CreateDeck();
+
         var card = _cards.First();
         _cards.Remove(card);
         return card;
     }
-
 
     private void Shuffle()
     {
