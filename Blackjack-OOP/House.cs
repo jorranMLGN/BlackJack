@@ -20,7 +20,7 @@ internal class House : Participant
                 Console.WriteLine("Dealer action:");
                 Console.ForegroundColor = ConsoleColor.Gray;
                 Console.WriteLine(
-                    "Y = Give player card  / N = Let player stand / S = Let player split / D = Let player double down");
+                    "Y = Hit  / N = Stand / S = Split / D = Double down");
                 Console.WriteLine("What would you like to do?");
                 var response = Console.ReadLine();
                 Console.ForegroundColor = ConsoleColor.Red;
