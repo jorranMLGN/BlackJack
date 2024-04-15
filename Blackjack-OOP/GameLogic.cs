@@ -63,14 +63,15 @@ internal class GameLogic
             _house.DrawCard(_deck);
         }
 
-        Console.WriteLine("Player's turn:");
-        PlayerTurn();
+
+        _player.ForEach(player => { player.PlayerTurn(_deck); });
     }
 
 
-    private void PlayerTurn()
+    private void CheckGameStandards()
     {
-        _player.ForEach(player => { });
+        if (_player.Count < GameStandards.MinPlayers || _player.Count > GameStandards.MaxPlayers)
+            throw new InvalidOperationException("Invalid amount of players");
     }
 
     private void ReturnMoney()
@@ -87,14 +88,6 @@ internal class GameLogic
                 player.Money -= 10;
         });
     }
-
-
-    private void CheckGameStandards()
-    {
-        if (_player.Count < GameStandards.MinPlayers || _player.Count > GameStandards.MaxPlayers)
-            throw new InvalidOperationException("Invalid amount of players");
-    }
-
 
     public void End()
     {

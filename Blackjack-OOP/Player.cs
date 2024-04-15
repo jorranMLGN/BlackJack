@@ -18,16 +18,46 @@ internal class Player(string name)
     }
 
     public List<Card> Hand { get; private set; } = [];
-    public List<List<Card>> Hands { get; set; } = new() { new List<Card>() };
+    private List<List<Card>> Hands { get; set; } = new() { new List<Card>() };
     private int _currentHandIndex = 0;
 
 
     public void PlayerTurn(Deck deck)
     {
         Console.WriteLine("Player's turn");
+        while (_currentHandIndex < Hands.Count)
+        {
+            PrintCurrentHand(_currentHandIndex);
+            Console.WriteLine("What would you like to do?");
+            Console.WriteLine("1. Hit");
+            Console.WriteLine("2. Stand");
+            if (CanSplit()) Console.WriteLine("3. Split");
+            if (CanDoubleDown()) Console.WriteLine("4. Double Down");
+
+            var input = Console.ReadLine();
+            switch (input)
+            {
+                case "1":
+                    DrawCard(deck);
+                    break;
+                case "2":
+                    Stand();
+                    break;
+                case "3":
+                    SplitHand();
+                    break;
+                case "4":
+                    DoubleDown(deck);
+                    break;
+                default:
+                    Console.WriteLine("Invalid input");
+                    break;
+            }
+        }
+
         DisplayHands();
 
-        RandomAlgorithm(Hands[_currentHandIndex]);
+        // RandomAlgorithm(Hands[_currentHandIndex]);
     }
 
     public void DrawCard(Deck deck)
@@ -47,12 +77,16 @@ internal class Player(string name)
     {
         return Hands[_currentHandIndex].Count == 2;
     }
-    
-    
+
+    public bool IsBusted()
+    {
+        return GetScore() > 21;
+    }
+
+
     public void SplitHand()
     {
-        if (Hands[_currentHandIndex].Count == 2 &&
-            Hands[_currentHandIndex][0].Value == Hands[_currentHandIndex][1].Value)
+        if (CanSplit())
         {
             var newHand = new List<Card> { Hands[_currentHandIndex][1] };
             Hands[_currentHandIndex].RemoveAt(1); // Remove one card from the original hand
@@ -61,6 +95,19 @@ internal class Player(string name)
         else
         {
             throw new InvalidOperationException("Cannot split hand.");
+        }
+    }
+
+    public void DoubleDown(Deck deck)
+    {
+        if (CanDoubleDown())
+        {
+            DrawCard(deck);
+            Stand();
+        }
+        else
+        {
+            throw new InvalidOperationException("Cannot double down.");
         }
     }
 
@@ -74,16 +121,27 @@ internal class Player(string name)
     {
         Console.WriteLine($"Hand {handIndex + 1}:");
         foreach (var card in Hands[handIndex]) card.PrintCard();
+        Console.WriteLine($"Score: {GetScore()}");
     }
+
 
     public int GetScore()
     {
-        return Hands[_currentHandIndex].Sum(x => x.Value);
-    }
+        var score = 0;
+        var aceCount = 0;
+        foreach (var card in Hands[_currentHandIndex])
+        {
+            if (card.Value == 1) aceCount++;
+            score += card.Value;
+        }
 
-    public void PrintScore(int handIndex)
-    {
-        Console.WriteLine(Hands[handIndex].Sum(x => x.Value));
+        while (score < 17 && aceCount > 0)
+        {
+            score += 10;
+            aceCount--;
+        }
+
+        return score;
     }
 
 
@@ -93,11 +151,11 @@ internal class Player(string name)
         for (var i = 0; i < Hands.Count; i++)
         {
             sb.Append($"Hand {i + 1}: ");
-            foreach (var card in Hands[i]) sb.Append($"{card} ");
-            sb.Append("\n");
+            foreach (var card in Hands[i]) sb.Append($"{card.PrintCard()} ");
+            sb.AppendLine();
         }
 
-        return sb.ToString();
+        return new StringBuilder().AppendJoin(" ", Hands.Select(x => x.Sum(y => y.Value))).ToString();
     }
 
     public void RandomAction(List<Card> hands)
@@ -107,7 +165,7 @@ internal class Player(string name)
         switch (action)
         {
             case 0:
-                DrawCard(hands);
+                // DrawCard( );
                 break;
             case 1:
                 Stand();
@@ -116,7 +174,7 @@ internal class Player(string name)
                 SplitHand();
                 break;
             case 3:
-                DrawCard(hands);
+                // DrawCard(hands);
                 break;
         }
     }

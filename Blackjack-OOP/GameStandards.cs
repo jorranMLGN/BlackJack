@@ -21,38 +21,18 @@ public class GameStandards
         return score == BlackjackValue;
     }
 
-    public bool IsDealerStand(int score)
+    public bool CanDealerStand(int score)
     {
         return score >= DealerStandValue;
     }
 
-    public bool IsPlayerStand(int score)
+    public bool CanSplit(List<Card> hand)
     {
-        return score >= MinHandValue;
+        return hand.Count == 2 && hand[0].Value == hand[1].Value;
     }
 
-    public bool IsPlayerBust(int score)
+    public bool CanDoubleDown(List<Card> hand)
     {
-        return score > MaxHandValue;
-    }
-
-    public bool IsPlayerBlackjack(int score)
-    {
-        return score == BlackjackValue;
-    }
-
-    public bool IsPlayerSplit(int score)
-    {
-        return score == BlackjackValue;
-    }
-
-    public bool IsPlayerDoubleDown(int score)
-    {
-        return score == BlackjackValue;
-    }
-
-    public bool IsPlayerDraw(int score)
-    {
-        return score < MinHandValue;
+        return hand.Count == 2;
     }
 }

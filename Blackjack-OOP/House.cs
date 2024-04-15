@@ -29,17 +29,13 @@ internal class House
                 player.SplitHand();
                 break;
             case "D":
-                DrawCard(deck);
+                player.DoubleDown(deck);
                 break;
+
             default:
                 Console.WriteLine("Invalid input");
                 break;
         }
-    }
-
-    public void PlayerTurn(Player player)
-    {
-        
     }
 
 

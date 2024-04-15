@@ -1,45 +1,39 @@
-﻿
-namespace Blackjack_OOP
+﻿namespace Blackjack_OOP;
+
+internal class Deck
 {
-    internal class Deck
+    private List<Card> _cards;
+
+    public Deck()
     {
-        private List<Card> _cards;
+        CreateDeck();
+    }
 
-        public Deck()
+
+    public Card Draw()
+    {
+        var card = _cards.First();
+        _cards.Remove(card);
+        return card;
+    }
+
+
+    private void Shuffle()
+    {
+        var rnd = new Random();
+        _cards = _cards.OrderBy(x => rnd.Next()).ToList();
+    }
+
+    private void CreateDeck()
+    {
+        _cards = new List<Card>();
+        foreach (Suit suit in Enum.GetValues(typeof(Suit)))
+        foreach (Face face in Enum.GetValues(typeof(Face)))
         {
-            CreateDeck();
+            var card = new Card(suit, face);
+            _cards.Add(card);
         }
 
-
-
-
-        public Card Draw()
-        {
-            var card = _cards.First();
-            _cards.Remove(card);
-            return card;
-        }
-
-
-        private void Shuffle()
-        {
-            var rnd = new Random();
-            _cards = _cards.OrderBy(x => rnd.Next()).ToList();
-        }
-
-        private void CreateDeck()
-        {
-            _cards = new List<Card>();
-            foreach (Suit suit in Enum.GetValues(typeof(Suit)))
-            {
-                foreach (Face face in Enum.GetValues(typeof(Face)))
-                {
-                    var card = new Card(suit, face);
-                    _cards.Add(card);
-                }
-            }
-            Shuffle();
-        }
-
+        Shuffle();
     }
 }
