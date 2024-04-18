@@ -2,6 +2,8 @@
 
 internal class House : Participant
 {
+    public List<Card> Hand { get; set; }
+
     public House()
     {
         Hand = new List<Card>();
@@ -9,12 +11,13 @@ internal class House : Participant
 
     public void TakeTurn(Deck deck, Player player)
     {
-        for (var i = 0; i < player.Hands.Count; i++)
+        var wrongInput = false;
+        do
         {
             var playerStands = false;
-            while (!player.IsBusted() && GetScore() != 21 && !playerStands)
-            {
-                player.PlayerTurn();
+            if ( !wrongInput)             player.PlayerTurn();
+            wrongInput = false;
+
                 Console.ForegroundColor = ConsoleColor.Yellow;
 
                 Console.WriteLine("Dealer action:");
@@ -27,31 +30,58 @@ internal class House : Participant
                 switch (response?.ToUpper())
                 {
                     case "Y":
-                        if (!player.IsBusted())
-                            player.DrawCard(deck);
-                        else
-                            Console.WriteLine("Player is busted");
+                        if (player.GetAction() != Action.Hit)
+                        {
+                            Console.WriteLine("This action is not allowed!");
+                            wrongInput = true;
+                            return;
+                        }
+                        player.DrawCard(deck);
 
                         break;
                     case "N":
+                        if (player.GetAction() != Action.Stand)
+                        {
+                            Console.WriteLine("This action is not allowed!");
+                            wrongInput = true;
+
+                            return;
+                        }
+
                         player.Stand();
                         playerStands = true;
                         break;
                     case "S":
+
+                        if (player.GetAction() != Action.Split)
+                        {
+                            Console.WriteLine("This action is not allowed!");
+                            wrongInput = true;
+
+                            return;
+                        }
+
                         if (!player.CanSplit())
                         {
                             Console.WriteLine("You can't split");
-                            continue;
+                            wrongInput = true;
+
+                            return;
                         }
 
                         player.SplitHand();
 
                         break;
                     case "D":
+                        if (player.GetAction() != Action.DoubleDown)
+                        {
+                            Console.WriteLine("This action is not allowed!");
+                            return;
+                        }
                         if (!player.CanDoubleDown())
                         {
                             Console.WriteLine("You can't double down");
-                            continue;
+                            return;
                         }
 
                         player.DoubleDown(deck);
@@ -60,30 +90,45 @@ internal class House : Participant
 
                     default:
                         Console.WriteLine("Invalid input");
-                        break;
+                        return;
                 }
 
 
                 Console.ResetColor();
 
-                if (!player.IsBusted()) continue;
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Player is busted\n");
-                Console.ResetColor();
-                break;
-            }
 
-            if (GetScore() != 21) continue;
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"{player.Name} has blackjack!");
-            Console.ResetColor();
+                if (player.IsBusted() )
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Player is busted\n");
+                    Console.ResetColor();
+                    break;
+                }
+
+                if (player.GetAction() == Action.Stand) break;
+
+
+
+                if (player.GetCurrentHand().Count == 2 && GetScore(player.GetCurrentHand()) == 21)
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine($"{player.Name} has blackjack!");
+                    Console.ResetColor();
+                    break;
+                }
+
+        } while (player.GetAction() != Action.Stand || !player.IsBusted() && !player.HasSplit());
+        if (player.HasSplit() && player._currentHandIndex < player.Hands.Count )
+        {
+            Console.WriteLine($"{player.Name}'s turn for second hand.");
+            TakeTurn(deck, player);
         }
     }
 
     public void SelfTurn(Deck deck)
     {
-        while (GetScore() < 17) DrawCard(deck);
-        if (GetScore() <= 21) return;
+        while (GetScore(Hand) < 17) DrawCard(deck);
+        if (GetScore(Hand) <= 21) return;
         Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine("Dealer is busted\n");
         Console.ResetColor();
@@ -101,7 +146,7 @@ internal class House : Participant
         Console.ForegroundColor = ConsoleColor.Gray;
         foreach (var card in Hand) card.PrintCard();
 
-        Console.WriteLine($"Score: {GetScore()}\n");
+        Console.WriteLine($"Score: {GetScore(Hand)}\n");
     }
 
 

@@ -4,8 +4,9 @@ internal class Deck
 {
     private List<Card> _cards;
 
-    public Deck()
+    public Deck(List<Card> cards)
     {
+        _cards = cards;
         CreateDeck();
     }
 
@@ -27,7 +28,7 @@ internal class Deck
 
     private void CreateDeck()
     {
-        _cards = new List<Card>();
+        _cards = [];
         foreach (Suit suit in Enum.GetValues(typeof(Suit)))
         foreach (Face face in Enum.GetValues(typeof(Face)))
         {

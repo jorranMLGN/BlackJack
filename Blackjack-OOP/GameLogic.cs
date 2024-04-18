@@ -9,7 +9,7 @@ internal class GameLogic
     public GameLogic()
     {
         _player = new List<Player>();
-        _deck = new Deck();
+        _deck = new Deck([]);
         _house = new House();
 
         Console.ForegroundColor = ConsoleColor.Cyan;
@@ -84,6 +84,13 @@ internal class GameLogic
             } left. Bet: {Math.Round(player.Bet, 2)}\n");
         }
 
+        if (_player.Count == 0)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("No players have been added. Exiting game.");
+            return;
+        }
+
         _house.RoundReset();
 
         for (var i = 0; i < 2; i++)
@@ -108,12 +115,12 @@ internal class GameLogic
         {
             foreach (var hand in player.Hands)
             {
-                if (player.GetScore() == 21)
+                if (Participant.GetScore(hand) == 21)
                 {
                     player.Money += player.Bet * 1.5;
                     Console.WriteLine($"{player.Name} has Blackjack and has won");
                 }
-                else if (player.GetScore() > 21)
+                else if (Participant.GetScore(hand) > 21)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
 
@@ -121,19 +128,19 @@ internal class GameLogic
                     Console.WriteLine($"{player.Name} has Lost");
                 }
 
-                else if (_house.GetScore() > 21)
+                else if (Participant.GetScore(_house.Hand) > 21)
                 {
                     Console.ForegroundColor = ConsoleColor.Green;
 
                     player.Money += player.Bet;
                     Console.WriteLine($"{player.Name} has Won");
                 }
-                else if (player.GetScore() > _house.GetScore())
+                else if (Participant.GetScore(hand) > Participant.GetScore(_house.Hand))
                 {
                     player.Money += player.Bet;
                     Console.WriteLine($"{player.Name} has Won");
                 }
-                else if (_house.GetScore() > player.GetScore())
+                else if (Participant.GetScore(_house.Hand) > Participant.GetScore(hand))
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     player.Money -= player.Bet;
@@ -147,6 +154,7 @@ internal class GameLogic
             }
         });
     }
+
 
     public void End()
     {

@@ -1,14 +1,10 @@
 ﻿namespace Blackjack_OOP;
-
 public abstract class Participant
 {
-    protected List<Card> Hand { get; set; }
-
-    public int GetScore()
+    public static int GetScore( List<Card> currentHand)
     {
         var score = 0;
         var aceCount = 0;
-        var currentHand = this is Player player ? player.GetCurrentHand() : Hand;
         foreach (var card in currentHand)
         {
             score += card.GetValue();
