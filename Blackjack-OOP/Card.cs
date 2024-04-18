@@ -1,6 +1,6 @@
 ﻿namespace Blackjack_OOP;
 
-public enum Suit : int
+public enum Suit
 {
     Hearts,
     Diamonds,
@@ -8,7 +8,7 @@ public enum Suit : int
     Spades
 }
 
-public enum Face : int
+public enum Face
 {
     Ace,
     Two,
@@ -27,11 +27,11 @@ public enum Face : int
 
 public class Card
 {
-    public Suit Suit { get; set; }
-    public Face Face { get; set; }
-    public int Value { get; set; }
-    public char Symbol { get; set; }
-    public ConsoleColor CardColor { get; set; }
+    private Suit Suit { get; set; }
+    private Face Face { get; set; }
+    public int Value { get; private set; }
+    private char Symbol { get; set; }
+    private ConsoleColor CardColor { get; set; }
 
     public Card(Suit suit, Face face)
     {
@@ -101,7 +101,7 @@ public class Card
                 break;
 
             default:
-                Value = 10; // Voor Jack, Queen, King
+                Value = 10; // Jack, Queen, King
                 Symbol = char.Parse(Face.ToString()[..1]);
                 break;
         }
@@ -113,7 +113,7 @@ public class Card
     }
 
 
-    public string SuitIcon()
+    private string SuitIcon()
     {
         return Suit switch
         {
