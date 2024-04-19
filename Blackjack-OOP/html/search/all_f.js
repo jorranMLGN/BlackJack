@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['queen_0',['Queen',['../namespace_blackjack___o_o_p.html#a7318c71354b3f0780be39474483d0234a2c2d2c0291163b077a372c2a9c5a6eda',1,'Blackjack_OOP']]]
+  ['value_0',['Value',['../class_blackjack___o_o_p_1_1_card.html#a0f707ce5f5c02ba082f3d5b4ef47577a',1,'Blackjack_OOP::Card']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['suit_0',['Suit',['../namespace_blackjack___o_o_p.html#a6ed6b9991f89dec01bbc6d18ec97a8dd',1,'Blackjack_OOP']]]
+  ['face_0',['Face',['../namespace_blackjack___o_o_p.html#ab02c65565c182d7265dd3e25ef19575e',1,'Blackjack_OOP']]]
 ];
